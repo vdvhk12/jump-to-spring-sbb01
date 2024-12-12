@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.example.jtsb01.question.Question;
@@ -146,12 +147,38 @@ class Jtsb01ApplicationTests {
             .build());
 
         //when
-        List<Question> result = questionRepository.findBySubjectLike("ssb%");
+        List<Question> result = questionRepository.findBySubjectLike("sbb%");
 
         //then
         assertThat(result).hasSize(2);
         assertThat(result.get(0).getId()).isEqualTo(question1.getId());
         assertThat(result.get(1).getId()).isEqualTo(question2.getId());
+    }
+
+    @Test
+    @DisplayName("Question Update Test")
+    @Transactional
+    void test07() {
+        //given
+        Question question = questionRepository.save(Question.builder()
+            .subject("sbb가 무엇인가요?")
+            .content("sbb에 대해서 알고 싶습니다.")
+            .createDate(LocalDateTime.now())
+            .answerList(new ArrayList<>())
+            .build());
+
+        //when
+        Question result = questionRepository.save(Question.builder()
+            .id(question.getId())
+            .subject(question.getSubject())
+            .content("수정된 제목")
+            .createDate(question.getCreateDate())
+            .answerList(question.getAnswerList())
+            .build());
+
+        //then
+        assertThat(result.getId()).isEqualTo(question.getId());
+        assertThat(result.getContent()).isEqualTo("수정된 제목");
     }
 
 }
