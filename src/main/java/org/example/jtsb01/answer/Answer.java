@@ -33,4 +33,10 @@ public class Answer {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Question question;
+
+    //연관관계 편의 메서드
+    public void setQuestion(Question question) {
+        this.question = question;
+        question.getAnswerList().add(this);
+    }
 }
