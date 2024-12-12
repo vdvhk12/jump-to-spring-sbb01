@@ -181,4 +181,24 @@ class Jtsb01ApplicationTests {
         assertThat(result.getContent()).isEqualTo("수정된 제목");
     }
 
+    @Test
+    @DisplayName("Question Delete Test")
+    @Transactional
+    void test08() {
+        //given
+        Question question = questionRepository.save(Question.builder()
+            .subject("sbb가 무엇인가요?")
+            .content("sbb에 대해서 알고 싶습니다.")
+            .createDate(LocalDateTime.now())
+            .answerList(new ArrayList<>())
+            .build());
+
+        //when
+        questionRepository.delete(question);
+        Optional<Question> result = questionRepository.findById(question.getId());
+
+        //then
+        assertThat(result).isEmpty();
+    }
+
 }
