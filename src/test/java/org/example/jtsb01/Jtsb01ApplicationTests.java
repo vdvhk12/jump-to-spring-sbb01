@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.example.jtsb01.question.Question;
 import org.example.jtsb01.question.QuestionRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -65,6 +66,92 @@ class Jtsb01ApplicationTests {
 
         //then
         assertThat(questions).hasSize(2);
+    }
+
+    @Test
+    @DisplayName("Question findById Test")
+    @Transactional
+    void test03() {
+        //given
+        Question question = questionRepository.save(Question.builder()
+            .subject("sbb가 무엇인가요?")
+            .content("sbb에 대해서 알고 싶습니다.")
+            .createDate(LocalDateTime.now())
+            .build());
+
+        //when
+        Optional<Question> result = questionRepository.findById(question.getId());
+
+        //then
+        assertThat(result).isPresent();
+        assertThat(result.get().getContent()).isEqualTo(question.getContent());
+    }
+
+    @Test
+    @DisplayName("Question findBySubject Test")
+    @Transactional
+    void test04() {
+        //given
+        Question question = questionRepository.save(Question.builder()
+            .subject("sbb가 무엇인가요?")
+            .content("sbb에 대해서 알고 싶습니다.")
+            .createDate(LocalDateTime.now())
+            .build());
+
+        //when
+        Optional<Question> result = questionRepository.findBySubject(question.getSubject());
+
+        //then
+        assertThat(result).isPresent();
+        assertThat(result.get().getId()).isEqualTo(question.getId());
+        assertThat(result.get().getContent()).isEqualTo(question.getContent());
+    }
+
+    @Test
+    @DisplayName("Question findBySubjectAndContent Test")
+    @Transactional
+    void test05() {
+        //given
+        Question question = questionRepository.save(Question.builder()
+            .subject("sbb가 무엇인가요?")
+            .content("sbb에 대해서 알고 싶습니다.")
+            .createDate(LocalDateTime.now())
+            .build());
+
+        //when
+        Optional<Question> result = questionRepository.findBySubjectAndContent(
+            question.getSubject(), question.getContent());
+
+        //then
+        assertThat(result).isPresent();
+        assertThat(result.get().getId()).isEqualTo(question.getId());
+        assertThat(result.get().getContent()).isEqualTo(question.getContent());
+    }
+
+    @Test
+    @DisplayName("Question findBySubjectLike Test")
+    @Transactional
+    void test06() {
+        //given
+        Question question1 = questionRepository.save(Question.builder()
+            .subject("sbb가 무엇인가요?")
+            .content("sbb에 대해서 알고 싶습니다.")
+            .createDate(LocalDateTime.now())
+            .build());
+
+        Question question2 = questionRepository.save(Question.builder()
+            .subject("sbb가 무엇인가요?")
+            .content("sbb에 대해서 알고 싶습니다.")
+            .createDate(LocalDateTime.now())
+            .build());
+
+        //when
+        List<Question> result = questionRepository.findBySubjectLike("ssb%");
+
+        //then
+        assertThat(result).hasSize(2);
+        assertThat(result.get(0).getId()).isEqualTo(question1.getId());
+        assertThat(result.get(1).getId()).isEqualTo(question2.getId());
     }
 
 }

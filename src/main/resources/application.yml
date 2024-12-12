@@ -11,6 +11,13 @@ spring:
     restart:
       enabled: false
 
+logging:
+  level:
+    org.springframework: INFO
+    org.example: DEBUG
+  file:
+    name: app.log
+
 ---
 # 기본 설정 (테스트용 메모리 H2 DB)
 spring:
