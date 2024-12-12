@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.example.jtsb01.answer.Answer;
+import org.example.jtsb01.answer.AnswerRepository;
 import org.example.jtsb01.question.Question;
 import org.example.jtsb01.question.QuestionRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -19,6 +21,9 @@ class Jtsb01ApplicationTests {
 
     @Autowired
     private QuestionRepository questionRepository;
+
+    @Autowired
+    private AnswerRepository answerRepository;
 
     @Test
     @DisplayName("Question Create Test")
@@ -199,6 +204,31 @@ class Jtsb01ApplicationTests {
 
         //then
         assertThat(result).isEmpty();
+    }
+
+    @Test
+    @DisplayName("Answer Create Test")
+    @Transactional
+    void test09() {
+        //given
+        //when
+        Question question = questionRepository.save(Question.builder()
+            .subject("스프링부트 모델 질문입니다.")
+            .content("id는 자동으로 생성되나요?")
+            .createDate(LocalDateTime.now())
+            .answerList(new ArrayList<>())
+            .build());
+
+        Answer answer = answerRepository.save(Answer.builder()
+            .content("네 자동으로 생성됩니다.")
+            .createDate(LocalDateTime.now())
+            .question(question)
+            .build());
+
+        //then
+        assertThat(answer.getId()).isEqualTo(1);
+        assertThat(answer.getContent()).isEqualTo("네 자동으로 생성됩니다.");
+        assertThat(answer.getQuestion().getId()).isEqualTo(question.getId());
     }
 
 }
