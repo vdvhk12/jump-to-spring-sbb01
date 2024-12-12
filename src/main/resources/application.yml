@@ -14,9 +14,10 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
     hibernate:
       ddl-auto: create
-      show-sql: true
-      format-sql: true
+    show-sql: true
   devtools:
-    restart: enabled=false
+    restart:
+      enabled: false
