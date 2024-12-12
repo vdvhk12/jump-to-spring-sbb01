@@ -257,6 +257,35 @@ class Jtsb01ApplicationTests {
         assertThat(answer.getContent()).isEqualTo(result.get().getContent());
     }
 
+    @Test
+    @DisplayName("Answer Update Test")
+    @Transactional
+    void test11() {
+        //given
+        Question question = questionRepository.save(Question.builder()
+            .subject("스프링부트 모델 질문입니다.")
+            .content("id는 자동으로 생성되나요?")
+            .createDate(LocalDateTime.now())
+            .answerList(new ArrayList<>())
+            .build());
 
+        Answer answer = answerRepository.save(Answer.builder()
+            .content("네 자동으로 생성됩니다.")
+            .createDate(LocalDateTime.now())
+            .question(question)
+            .build());
+
+        //when
+        Answer result = answerRepository.save(Answer.builder()
+            .id(answer.getId())
+            .content("수정된 답변")
+            .createDate(answer.getCreateDate())
+            .question(answer.getQuestion())
+            .build());
+
+        //then
+        assertThat(result.getId()).isEqualTo(answer.getId());
+        assertThat(result.getContent()).isEqualTo("수정된 답변");
+    }
 
 }
