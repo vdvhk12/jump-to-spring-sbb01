@@ -288,4 +288,30 @@ class Jtsb01ApplicationTests {
         assertThat(result.getContent()).isEqualTo("수정된 답변");
     }
 
+    @Test
+    @DisplayName("Answer Delete Test")
+    @Transactional
+    void test12() {
+        //given
+        Question question = questionRepository.save(Question.builder()
+            .subject("스프링부트 모델 질문입니다.")
+            .content("id는 자동으로 생성되나요?")
+            .createDate(LocalDateTime.now())
+            .answerList(new ArrayList<>())
+            .build());
+
+        Answer answer = answerRepository.save(Answer.builder()
+            .content("네 자동으로 생성됩니다.")
+            .createDate(LocalDateTime.now())
+            .question(question)
+            .build());
+
+        //when
+        answerRepository.delete(answer);
+        Optional<Answer> result = answerRepository.findById(answer.getId());
+
+        //then
+        assertThat(result).isEmpty();
+    }
+
 }
