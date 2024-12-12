@@ -1,4 +1,4 @@
-package org.example.jtsb01.question;
+package org.example.jtsb01.question.entity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -14,7 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.jtsb01.answer.Answer;
+import org.example.jtsb01.answer.entity.Answer;
 
 @Entity
 @Getter
