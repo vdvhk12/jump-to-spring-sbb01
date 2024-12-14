@@ -26,6 +26,7 @@ public class QuestionDto {
             .id(question.getId())
             .subject(question.getSubject())
             .createDate(question.getCreateDate())
+            .answerCount((long) question.getAnswerList().size())
             .build();
     }
 
