@@ -13,7 +13,7 @@ spring:
 
 #logging:
 #  level:
-#    org.springframework: INFO
+#    root: INFO
 #    org.example: DEBUG
 #  file:
 #    name: app.log
