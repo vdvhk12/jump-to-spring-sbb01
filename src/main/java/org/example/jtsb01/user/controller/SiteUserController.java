@@ -26,6 +26,11 @@ public class SiteUserController {
         return "signup_form";
     }
 
+    @GetMapping("/login")
+    public String login() {
+        return "login_form";
+    }
+
     @PostMapping("/signup")
     public String signup(@Valid SiteUserForm siteUserForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
