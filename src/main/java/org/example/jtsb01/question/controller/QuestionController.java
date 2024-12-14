@@ -1,7 +1,6 @@
 package org.example.jtsb01.question.controller;
 
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.jtsb01.answer.model.AnswerForm;
 import org.example.jtsb01.question.model.QuestionDto;
@@ -25,7 +24,7 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @GetMapping("/list")
-    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
+    public String list(Model model, @RequestParam(value = "page", defaultValue = "1") int page) {
         Page<QuestionDto> paging = questionService.getList(page).map(QuestionDto::fromEntity);
         model.addAttribute("paging", paging);
         return "question_list";
