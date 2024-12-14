@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.example.jtsb01.answer.model.AnswerDto;
+import org.example.jtsb01.answer.repository.AnswerRepository;
 import org.example.jtsb01.global.exception.DataNotFoundException;
 import org.example.jtsb01.question.entity.Question;
 import org.example.jtsb01.question.model.QuestionDto;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 public class QuestionService {
 
     private final QuestionRepository questionRepository;
+    private final AnswerRepository answerRepository;
 
     public List<QuestionDto> getList() {
         return questionRepository.findAll().stream().map(QuestionDto::fromEntity).toList();
@@ -36,6 +39,21 @@ public class QuestionService {
     public QuestionDto getQuestion(Long id) {
         return QuestionDto.fromEntity(questionRepository.findById(id)
             .orElseThrow(() -> new DataNotFoundException("Question not found")));
+    }
+
+    public QuestionDto getQuestion(Long id, int page) {
+
+        Question question = questionRepository.findById(id)
+            .orElseThrow(() -> new DataNotFoundException("Question not found"));
+
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.asc("createDate"));
+        
+        Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(sorts));
+        Page<AnswerDto> answerPage = answerRepository.findByQuestionId(question.getId(), pageable)
+            .map(AnswerDto::fromEntity);
+
+        return QuestionDto.fromEntity(question, answerPage);
     }
 
     public void createQuestion(QuestionForm questionForm) {

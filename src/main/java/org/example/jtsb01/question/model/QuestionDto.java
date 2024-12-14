@@ -1,13 +1,12 @@
 package org.example.jtsb01.question.model;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.jtsb01.answer.model.AnswerDto;
 import org.example.jtsb01.question.entity.Question;
+import org.springframework.data.domain.Page;
 
 @Getter
 @Setter
@@ -18,16 +17,27 @@ public class QuestionDto {
     private String subject;
     private String content;
     private LocalDateTime createDate;
-    private List<AnswerDto> answerList;
+    private Long answerCount;
+    private Page<AnswerDto> answerList;
 
+    //목록페이지
     public static QuestionDto fromEntity(Question question) {
+        return QuestionDto.builder()
+            .id(question.getId())
+            .subject(question.getSubject())
+            .createDate(question.getCreateDate())
+            .build();
+    }
+
+    //상세페이지
+    public static QuestionDto fromEntity(Question question, Page<AnswerDto> answerPage) {
         return QuestionDto.builder()
             .id(question.getId())
             .subject(question.getSubject())
             .content(question.getContent())
             .createDate(question.getCreateDate())
-            .answerList(question.getAnswerList().stream().map(AnswerDto::fromEntity).collect(
-                Collectors.toList()))
+            .answerCount(answerPage.getTotalElements())
+            .answerList(answerPage)
             .build();
     }
 }

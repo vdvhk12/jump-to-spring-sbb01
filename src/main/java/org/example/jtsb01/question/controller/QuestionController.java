@@ -31,8 +31,9 @@ public class QuestionController {
     }
 
     @GetMapping("/detail/{id}")
-    public String detail(@PathVariable("id") Long id, Model model, AnswerForm answerForm) {
-        QuestionDto question = questionService.getQuestion(id);
+    public String detail(@PathVariable("id") Long id, Model model, AnswerForm answerForm,
+        @RequestParam(value = "page", defaultValue = "1") int page) {
+        QuestionDto question = questionService.getQuestion(id, page);
         model.addAttribute("question", question);
         return "question_detail";
     }
