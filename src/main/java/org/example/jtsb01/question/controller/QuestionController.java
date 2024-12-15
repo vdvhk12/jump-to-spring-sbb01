@@ -9,8 +9,6 @@ import org.example.jtsb01.question.model.QuestionForm;
 import org.example.jtsb01.question.service.QuestionService;
 import org.example.jtsb01.user.model.SiteUserDto;
 import org.example.jtsb01.user.service.SiteUserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,7 +29,6 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/question")
 public class QuestionController {
 
-    private static final Logger logger = LoggerFactory.getLogger(QuestionController.class);
     private final QuestionService questionService;
     private final SiteUserService siteUserService;
 
@@ -63,28 +60,16 @@ public class QuestionController {
         if (bindingResult.hasErrors()) {
             return "question_form";
         }
-
-        logger.info("principal : {}", principal);
-        if (principal instanceof OAuth2AuthenticationToken oauth2Token) {
-            OAuth2User oauth2User = oauth2Token.getPrincipal();
-            String name = (String) oauth2User.getAttributes().get("name");
-
-            SiteUserDto siteUser = siteUserService.getSiteUser(name);
-            questionService.createQuestion(questionForm, siteUser);
-        } else {
-            SiteUserDto siteUser = siteUserService.getSiteUser(principal.getName());
-            questionService.createQuestion(questionForm, siteUser);
-        }
-
+        String username = getUsernameFromPrincipal(principal);
+        SiteUserDto siteUser = siteUserService.getSiteUser(username);
+        questionService.createQuestion(questionForm, siteUser);
         return "redirect:/question/list";
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String modify(QuestionForm questionForm, @PathVariable("id") Long id,
-        Principal principal) {
+    public String modify(QuestionForm questionForm, @PathVariable("id") Long id) {
         QuestionDto question = questionService.getQuestion(id);
-
         questionForm.setSubject(question.getSubject());
         questionForm.setContent(question.getContent());
         return "question_form";
@@ -98,19 +83,8 @@ public class QuestionController {
             return "question_form";
         }
         QuestionDto question = questionService.getQuestion(id);
-
-        if (principal instanceof OAuth2AuthenticationToken oauth2Token) {
-            OAuth2User oauth2User = oauth2Token.getPrincipal();
-            String name = (String) oauth2User.getAttributes().get("name");
-            if (!question.getAuthor().getUsername().equals(name)) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다.");
-            }
-        } else {
-            if (!question.getAuthor().getUsername().equals(principal.getName())) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다.");
-            }
-        }
-
+        String username = getUsernameFromPrincipal(principal);
+        checkUserPermission(username, question.getAuthor().getUsername(), "수정");
         questionService.modifyQuestion(id, questionForm);
         return String.format("redirect:/question/detail/%s", id);
     }
@@ -119,18 +93,25 @@ public class QuestionController {
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") Long id, Principal principal) {
         QuestionDto question = questionService.getQuestion(id);
-        if (principal instanceof OAuth2AuthenticationToken oauth2Token) {
-            OAuth2User oauth2User = oauth2Token.getPrincipal();
-            String name = (String) oauth2User.getAttributes().get("name");
-            if (!question.getAuthor().getUsername().equals(name)) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제 권한이 없습니다.");
-            }
-        } else {
-            if (!question.getAuthor().getUsername().equals(principal.getName())) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제 권한이 없습니다.");
-            }
-        }
+        String username = getUsernameFromPrincipal(principal);
+        checkUserPermission(username, question.getAuthor().getUsername(), "삭제");
         questionService.deleteQuestion(id);
         return "redirect:/";
+    }
+
+    // 사용자 이름 꺼내오는 메서드
+    private String getUsernameFromPrincipal(Principal principal) {
+        if (principal instanceof OAuth2AuthenticationToken oauth2Token) {
+            OAuth2User oauth2User = oauth2Token.getPrincipal();
+            return (String) oauth2User.getAttributes().get("name");
+        }
+        return principal.getName();
+    }
+
+    // 권한 체크 메서드
+    private void checkUserPermission(String principalUsername, String targetUsername, String action) {
+        if (!principalUsername.equals(targetUsername)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, action + " 권한이 없습니다.");
+        }
     }
 }
