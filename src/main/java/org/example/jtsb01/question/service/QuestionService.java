@@ -79,4 +79,8 @@ public class QuestionService {
             .answerList(question.getAnswerList())
             .build());
     }
+
+    public void deleteQuestion(Long id) {
+        questionRepository.deleteById(id);
+    }
 }

@@ -81,10 +81,10 @@ public class QuestionController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String modify(QuestionForm questionForm, @PathVariable("id") Long id, Principal principal) {
+    public String modify(QuestionForm questionForm, @PathVariable("id") Long id,
+        Principal principal) {
         QuestionDto question = questionService.getQuestion(id);
 
-//        logger.info("principal : {}", principal);
         questionForm.setSubject(question.getSubject());
         questionForm.setContent(question.getContent());
         return "question_form";
@@ -115,5 +115,22 @@ public class QuestionController {
         return String.format("redirect:/question/detail/%s", id);
     }
 
-
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable("id") Long id, Principal principal) {
+        QuestionDto question = questionService.getQuestion(id);
+        if (principal instanceof OAuth2AuthenticationToken oauth2Token) {
+            OAuth2User oauth2User = oauth2Token.getPrincipal();
+            String name = (String) oauth2User.getAttributes().get("name");
+            if (!question.getAuthor().getUsername().equals(name)) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제 권한이 없습니다.");
+            }
+        } else {
+            if (!question.getAuthor().getUsername().equals(principal.getName())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제 권한이 없습니다.");
+            }
+        }
+        questionService.deleteQuestion(id);
+        return "redirect:/";
+    }
 }

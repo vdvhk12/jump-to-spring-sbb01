@@ -19,21 +19,12 @@
 				   and #authentication.getPrincipal().getUsername() == question.author.username)
 				   or #authentication.getPrincipal().attributes.name == question.author.username}"
 				   th:text="수정"></a>
-
-<!--				<p th:text="${#authentication.getPrincipal()}">-->
-<!--				<p th:text="${#authentication.getPrincipal().attributes.name}">-->
-<!--				<p th:text="${#authentication.getName()}">-->
-<!--				<p th:text="${#authentication.getAuthorities()}">-->
-<!--				<p th:text="${#authentication.getDetails()}">-->
-<!--				<p th:if="${#authentication.getPrincipal() instanceof T(org.springframework.security.core.userdetails.User)}" th:text="${#authentication.getPrincipal().getUsername()}">-->
-<!--				<p th:if="${#authentication.getPrincipal() instanceof T(org.springframework.security.core.userdetails.User)}" th:text="${#authentication.getPrincipal().getUsername()}">-->
-
-<!--				<a th:href="@{|/question/modify/${question.id}|}" class="btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"-->
-<!--				   th:if="${question.author != null and #authentication.principal instanceof T(org.springframework.security.oauth2.core.OAuth2AuthenticationToken)-->
-<!--				   and #authentication.getPrincipal().getAttributes() == question.author.username}"-->
-<!--				   th:text="수정"></a>-->
-
-				<p></p>
+				<a href="javascript:void(0);" th:data-uri="@{|/question/delete/${question.id}|}"
+				   class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
+				   th:if="${question.author != null and (#authentication.getPrincipal() instanceof T(org.springframework.security.core.userdetails.User)
+				   and #authentication.getPrincipal().getUsername() == question.author.username)
+				   or #authentication.getPrincipal().attributes.name == question.author.username}"
+				   th:text="삭제"></a>
 			</div>
 		</div>
 	</div>
@@ -84,6 +75,16 @@
 		<input type="submit" value="답변등록" class="btn btn-primary my-2">
 	</form>
 </div>
+<script layout:fragment="script" type='text/javascript'>
+  const delete_elements = document.getElementsByClassName("delete");
+  Array.from(delete_elements).forEach(function(element) {
+    element.addEventListener('click', function() {
+      if(confirm("정말로 삭제하시겠습니까?")) {
+        location.href = this.dataset.uri;
+      };
+    });
+  });
+</script>
 </html>
 
 
