@@ -42,6 +42,7 @@ public class QuestionDto {
             .subject(question.getSubject())
             .content(question.getContent())
             .createDate(question.getCreateDate())
+            .modifyDate(question.getModifyDate())
             .answerCount(answerPage.getTotalElements())
             .author(SiteUserDto.fromEntity(question.getAuthor()))
             .answerList(answerPage)

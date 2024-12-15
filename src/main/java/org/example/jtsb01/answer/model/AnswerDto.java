@@ -25,6 +25,7 @@ public class AnswerDto {
             .id(answer.getId())
             .content(answer.getContent())
             .createDate(answer.getCreateDate())
+            .modifyDate(answer.getModifyDate())
             .author(SiteUserDto.fromEntity(answer.getAuthor()))
             .question(QuestionDto.builder()
                 .id(answer.getQuestion().getId())
