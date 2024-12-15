@@ -83,4 +83,11 @@ public class QuestionService {
     public void deleteQuestion(Long id) {
         questionRepository.deleteById(id);
     }
+
+    public void vote(Long id, SiteUserDto siteUserDto) {
+        Question question = questionRepository.findById(id)
+            .orElseThrow(() -> new DataNotFoundException("Question not found"));
+        question.getVoter().add(SiteUserDto.fromDto(siteUserDto));
+        questionRepository.save(question);
+    }
 }

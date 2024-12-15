@@ -1,6 +1,8 @@
 package org.example.jtsb01.question.model;
 
 import java.time.LocalDateTime;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +24,7 @@ public class QuestionDto {
     private Long answerCount;
     private SiteUserDto author;
     private Page<AnswerDto> answerList;
+    private Set<SiteUserDto> voter;
 
     //목록페이지
     public static QuestionDto fromEntity(Question question) {
@@ -46,6 +49,8 @@ public class QuestionDto {
             .answerCount(answerPage.getTotalElements())
             .author(SiteUserDto.fromEntity(question.getAuthor()))
             .answerList(answerPage)
+            .voter(question.getVoter().stream().map(SiteUserDto::fromEntity)
+                .collect(Collectors.toSet()))
             .build();
     }
 }
