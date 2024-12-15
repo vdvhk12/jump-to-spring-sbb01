@@ -65,4 +65,18 @@ public class QuestionService {
             .author(SiteUserDto.fromDto(siteUserDto))
             .build());
     }
+
+    public void modifyQuestion(Long id, QuestionForm questionForm) {
+        Question question = questionRepository.findById(id)
+            .orElseThrow(() -> new DataNotFoundException("Question not found"));
+        questionRepository.save(Question.builder()
+            .id(question.getId())
+            .subject(questionForm.getSubject())
+            .content(questionForm.getContent())
+            .createDate(question.getCreateDate())
+            .modifyDate(LocalDateTime.now())
+            .author(question.getAuthor())
+            .answerList(question.getAnswerList())
+            .build());
+    }
 }

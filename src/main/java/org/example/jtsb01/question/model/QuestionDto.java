@@ -18,6 +18,7 @@ public class QuestionDto {
     private String subject;
     private String content;
     private LocalDateTime createDate;
+    private LocalDateTime modifyDate;
     private Long answerCount;
     private SiteUserDto author;
     private Page<AnswerDto> answerList;
@@ -27,6 +28,7 @@ public class QuestionDto {
         return QuestionDto.builder()
             .id(question.getId())
             .subject(question.getSubject())
+            .content(question.getContent())
             .createDate(question.getCreateDate())
             .answerCount((long) question.getAnswerList().size())
             .author(SiteUserDto.fromEntity(question.getAuthor()))
