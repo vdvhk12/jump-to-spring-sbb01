@@ -103,7 +103,7 @@ public class QuestionController {
     @GetMapping("/vote/{id}")
     public String vote(@PathVariable("id") Long id, Principal principal) {
         SiteUserDto siteUser = siteUserService.getSiteUser(getUsernameFromPrincipal(principal));
-        questionService.vote(id, siteUser);
+        questionService.voteQuestion(id, siteUser);
         return String.format("redirect:/question/detail/%s", id);
     }
 

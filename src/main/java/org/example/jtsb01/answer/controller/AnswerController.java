@@ -79,6 +79,15 @@ public class AnswerController {
         return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/vote/{id}")
+    public String vote(@PathVariable("id") Long id, Principal principal) {
+        AnswerDto answer = answerService.getAnswer(id);
+        SiteUserDto siteUser = siteUserService.getSiteUser(getUsernameFromPrincipal(principal));
+        answerService.voteAnswer(id, siteUser);
+        return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
+    }
+
     // 사용자 이름 꺼내오는 메서드
     private String getUsernameFromPrincipal(Principal principal) {
         if (principal instanceof OAuth2AuthenticationToken oauth2Token) {

@@ -52,4 +52,11 @@ public class AnswerService {
     public void deleteAnswer(Long id) {
         answerRepository.deleteById(id);
     }
+
+    public void voteAnswer(Long id, SiteUserDto siteUserDto) {
+        Answer answer = answerRepository.findById(id)
+            .orElseThrow(() -> new DataNotFoundException("Answer not found"));
+        answer.getVoter().add(SiteUserDto.fromDto(siteUserDto));
+        answerRepository.save(answer);
+    }
 }

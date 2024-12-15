@@ -6,8 +6,10 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
+import java.util.Set;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,6 +41,9 @@ public class Answer {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Question question;
+
+    @ManyToMany
+    private Set<SiteUser> voter;
 
     //연관관계 편의 메서드
     public void setQuestion(Question question) {
