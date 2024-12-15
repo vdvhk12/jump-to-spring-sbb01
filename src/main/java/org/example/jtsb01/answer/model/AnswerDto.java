@@ -16,6 +16,7 @@ public class AnswerDto {
     private Long id;
     private String content;
     private LocalDateTime createDate;
+    private LocalDateTime modifyDate;
     private SiteUserDto author;
     private QuestionDto question;
 

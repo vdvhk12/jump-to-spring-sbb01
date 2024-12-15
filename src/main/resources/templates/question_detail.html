@@ -44,6 +44,21 @@
 					<div th:text="${#temporals.format(answer.createDate, 'yyyy-MM-dd HH:mm')}"></div>
 				</div>
 			</div>
+			<div class="my-3">
+				<a th:href="@{|/answer/modify/${answer.id}|}" class="btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
+				   th:if="${(answer.author != null and #authentication.getPrincipal() instanceof T(org.springframework.security.core.userdetails.User)
+				        and #authentication.getPrincipal().getUsername() == answer.author.username)
+				   or (answer.author != null and #authentication.getPrincipal() instanceof T(org.springframework.security.oauth2.core.user.DefaultOAuth2User)
+				        and #authentication.getPrincipal().attributes.name == answer.author.username)}"
+				   th:text="수정"></a>
+				<a href="javascript:void(0);" th:data-uri="@{|/answer/delete/${answer.id}|}"
+				   class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
+				   th:if="${(answer.author != null and #authentication.getPrincipal() instanceof T(org.springframework.security.core.userdetails.User)
+				        and #authentication.getPrincipal().getUsername() == answer.author.username)
+				   or (answer.author != null and #authentication.getPrincipal() instanceof T(org.springframework.security.oauth2.core.user.DefaultOAuth2User)
+				        and #authentication.getPrincipal().attributes.name == answer.author.username)}"
+				   th:text="삭제"></a>
+			</div>
 		</div>
 	</div>
 	<!-- 답변 반복 끝 -->
