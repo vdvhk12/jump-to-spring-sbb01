@@ -33,8 +33,9 @@ public class QuestionController {
     private final SiteUserService siteUserService;
 
     @GetMapping("/list")
-    public String list(Model model, @RequestParam(value = "page", defaultValue = "1") int page) {
-        Page<QuestionDto> paging = questionService.getList(page).map(QuestionDto::fromEntity);
+    public String list(Model model, @RequestParam(value = "page", defaultValue = "1") int page,
+        @RequestParam(value = "kw", defaultValue = "") String kw) {
+        Page<QuestionDto> paging = questionService.getList(kw, page);
         model.addAttribute("paging", paging);
         return "question_list";
     }
