@@ -15,15 +15,17 @@
 			</div>
 			<div class="my-3">
 				<a th:href="@{|/question/modify/${question.id}|}" class="btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
-				   th:if="${question.author != null and (#authentication.getPrincipal() instanceof T(org.springframework.security.core.userdetails.User)
-				   and #authentication.getPrincipal().getUsername() == question.author.username)
-				   or #authentication.getPrincipal().attributes.name == question.author.username}"
+				   th:if="${(question.author != null and #authentication.getPrincipal() instanceof T(org.springframework.security.core.userdetails.User)
+				        and #authentication.getPrincipal().getUsername() == question.author.username)
+				   or (question.author != null and #authentication.getPrincipal() instanceof T(org.springframework.security.oauth2.core.user.DefaultOAuth2User)
+				        and #authentication.getPrincipal().attributes.name == question.author.username)}"
 				   th:text="수정"></a>
 				<a href="javascript:void(0);" th:data-uri="@{|/question/delete/${question.id}|}"
 				   class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
-				   th:if="${question.author != null and (#authentication.getPrincipal() instanceof T(org.springframework.security.core.userdetails.User)
-				   and #authentication.getPrincipal().getUsername() == question.author.username)
-				   or #authentication.getPrincipal().attributes.name == question.author.username}"
+				   th:if="${(question.author != null and #authentication.getPrincipal() instanceof T(org.springframework.security.core.userdetails.User)
+				        and #authentication.getPrincipal().getUsername() == question.author.username)
+				   or (question.author != null and #authentication.getPrincipal() instanceof T(org.springframework.security.oauth2.core.user.DefaultOAuth2User)
+				        and #authentication.getPrincipal().attributes.name == question.author.username)}"
 				   th:text="삭제"></a>
 			</div>
 		</div>
