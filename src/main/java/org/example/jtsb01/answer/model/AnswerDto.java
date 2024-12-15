@@ -32,6 +32,7 @@ public class AnswerDto {
             .author(SiteUserDto.fromEntity(answer.getAuthor()))
             .question(QuestionDto.builder()
                 .id(answer.getQuestion().getId())
+                .answerCount((long)answer.getQuestion().getAnswerList().size())
                 .build())
             .voter(answer.getVoter().stream().map(SiteUserDto::fromEntity).collect(Collectors.toSet()))
             .build();

@@ -1,6 +1,7 @@
 package org.example.jtsb01.answer.service;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import lombok.RequiredArgsConstructor;
 import org.example.jtsb01.answer.entity.Answer;
 import org.example.jtsb01.answer.model.AnswerDto;
@@ -19,16 +20,17 @@ public class AnswerService {
     private final AnswerRepository answerRepository;
     private final QuestionRepository questionRepository;
 
-    public void createAnswer(Long id, AnswerForm answerForm, SiteUserDto siteUserDto) {
+    public AnswerDto createAnswer(Long id, AnswerForm answerForm, SiteUserDto siteUserDto) {
         Question question = questionRepository.findById(id)
             .orElseThrow(() -> new DataNotFoundException("Question not found"));
 
-        answerRepository.save(Answer.builder()
+        return AnswerDto.fromEntity(answerRepository.save(Answer.builder()
             .content(answerForm.getContent())
             .createDate(LocalDateTime.now())
             .author(SiteUserDto.fromDto(siteUserDto))
             .question(question)
-            .build());
+            .voter(new HashSet<>())
+            .build()));
     }
 
     public AnswerDto getAnswer(Long id) {

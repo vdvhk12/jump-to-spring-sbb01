@@ -43,8 +43,9 @@ public class AnswerController {
         }
         String username = getUsernameFromPrincipal(principal);
         SiteUserDto siteUser = siteUserService.getSiteUser(username);
-        answerService.createAnswer(id, answerForm, siteUser);
-        return String.format("redirect:/question/detail/%s", id);
+        AnswerDto answer = answerService.createAnswer(id, answerForm, siteUser);
+        return String.format("redirect:/question/detail/%s?page=%d#answer_%s", id,
+            question.getAnswerCount() / 10 + 1, answer.getId());
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -66,7 +67,10 @@ public class AnswerController {
         String username = getUsernameFromPrincipal(principal);
         checkUserPermission(username, answer.getAuthor().getUsername(), "수정");
         answerService.modifyAnswer(id, answerForm);
-        return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
+        return String.format("redirect:/question/detail/%s?page=%d#answer_%s",
+            answer.getQuestion().getId(),
+            answer.getQuestion().getAnswerCount() / 10 + 1,
+            answer.getId());
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -85,7 +89,10 @@ public class AnswerController {
         AnswerDto answer = answerService.getAnswer(id);
         SiteUserDto siteUser = siteUserService.getSiteUser(getUsernameFromPrincipal(principal));
         answerService.voteAnswer(id, siteUser);
-        return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
+        return String.format("redirect:/question/detail/%s?page=%d#answer_%s",
+            answer.getQuestion().getId(),
+            answer.getQuestion().getAnswerCount() / 10 + 1,
+            answer.getId());
     }
 
     // 사용자 이름 꺼내오는 메서드
