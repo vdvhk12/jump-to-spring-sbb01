@@ -11,6 +11,7 @@ import org.example.jtsb01.question.entity.Question;
 import org.example.jtsb01.question.model.QuestionDto;
 import org.example.jtsb01.question.model.QuestionForm;
 import org.example.jtsb01.question.repository.QuestionRepository;
+import org.example.jtsb01.user.model.SiteUserDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -56,11 +57,12 @@ public class QuestionService {
         return QuestionDto.fromEntity(question, answerPage);
     }
 
-    public void createQuestion(QuestionForm questionForm) {
+    public void createQuestion(QuestionForm questionForm, SiteUserDto siteUserDto) {
         questionRepository.save(Question.builder()
             .subject(questionForm.getSubject())
             .content(questionForm.getContent())
             .createDate(LocalDateTime.now())
+            .author(SiteUserDto.fromDto(siteUserDto))
             .build());
     }
 }

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.jtsb01.answer.entity.Answer;
 import org.example.jtsb01.question.model.QuestionDto;
+import org.example.jtsb01.user.model.SiteUserDto;
 
 @Getter
 @Setter
@@ -15,6 +16,7 @@ public class AnswerDto {
     private Long id;
     private String content;
     private LocalDateTime createDate;
+    private SiteUserDto author;
     private QuestionDto question;
 
     public static AnswerDto fromEntity(Answer answer) {
@@ -22,6 +24,7 @@ public class AnswerDto {
             .id(answer.getId())
             .content(answer.getContent())
             .createDate(answer.getCreateDate())
+            .author(SiteUserDto.fromEntity(answer.getAuthor()))
             .question(QuestionDto.builder()
                 .id(answer.getQuestion().getId())
                 .build())

@@ -14,6 +14,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.jtsb01.question.entity.Question;
+import org.example.jtsb01.user.entity.SiteUser;
 
 @Entity
 @Getter
@@ -30,6 +31,9 @@ public class Answer {
     private String content;
 
     private LocalDateTime createDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private SiteUser author;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Question question;

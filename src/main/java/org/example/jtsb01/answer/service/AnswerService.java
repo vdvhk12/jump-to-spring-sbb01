@@ -8,6 +8,7 @@ import org.example.jtsb01.answer.repository.AnswerRepository;
 import org.example.jtsb01.global.exception.DataNotFoundException;
 import org.example.jtsb01.question.entity.Question;
 import org.example.jtsb01.question.repository.QuestionRepository;
+import org.example.jtsb01.user.model.SiteUserDto;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,13 +18,14 @@ public class AnswerService {
     private final AnswerRepository answerRepository;
     private final QuestionRepository questionRepository;
 
-    public void createAnswer(Long id, AnswerForm answerForm) {
+    public void createAnswer(Long id, AnswerForm answerForm, SiteUserDto siteUserDto) {
         Question question = questionRepository.findById(id)
             .orElseThrow(() -> new DataNotFoundException("Question not found"));
 
         answerRepository.save(Answer.builder()
             .content(answerForm.getContent())
             .createDate(LocalDateTime.now())
+            .author(SiteUserDto.fromDto(siteUserDto))
             .question(question)
             .build());
     }
