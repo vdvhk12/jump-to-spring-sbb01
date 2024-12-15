@@ -19,7 +19,8 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
+        http.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.requestMatchers(
+                new AntPathRequestMatcher("/**")).permitAll())
             .csrf(csrf -> csrf.ignoringRequestMatchers(
                 new AntPathRequestMatcher("/h2-console/**")))
             .headers(headers -> headers.addHeaderWriter(new XFrameOptionsHeaderWriter(
@@ -28,6 +29,8 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/"))
             .logout(logout -> logout.logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
                 .logoutSuccessUrl("/").invalidateHttpSession(true))
+            .oauth2Login(
+                oauth2 -> oauth2.defaultSuccessUrl("/home").failureUrl("/login?error=true"))
         ;
 
         return http.build();
