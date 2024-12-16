@@ -3,6 +3,7 @@ package org.example.jtsb01.user.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.jtsb01.global.exception.PasswordNotMatchException;
+import org.example.jtsb01.mail.model.MailForm;
 import org.example.jtsb01.user.model.PasswordForm;
 import org.example.jtsb01.user.model.SiteUserForm;
 import org.example.jtsb01.user.service.SiteUserService;
@@ -61,6 +62,11 @@ public class SiteUserController {
         return "redirect:/";
     }
 
+    @GetMapping("/find/password")
+    public String findPassword(MailForm mailForm) {
+        return "mail_form";
+    }
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}/password")
     public String updatePassword(@PathVariable("id") Long id, PasswordForm passwordForm) {
@@ -88,6 +94,6 @@ public class SiteUserController {
         }
 
         siteUserService.updatePassword(id, passwordForm);
-        return "redirect:/";
+        return "redirect:/user/logout";
     }
 }

@@ -54,4 +54,20 @@ public class SiteUserService {
             throw new PasswordNotMatchException("기존 비밀번호가 일치하지 않습니다.");
         }
     }
+
+    public SiteUserDto updateTempPassword(String email, String tempPassword) {
+        SiteUser siteUser = checkEmailExists(email);
+        return SiteUserDto.fromEntity(siteUserRepository.save(SiteUser.builder()
+            .id(siteUser.getId())
+            .username(siteUser.getUsername())
+            .password(passwordEncoder.encode(tempPassword))
+            .email(siteUser.getEmail())
+            .userRole(UserRole.USER)
+            .build()));
+    }
+
+    private SiteUser checkEmailExists(String email) {
+        return siteUserRepository.findByEmail(email)
+            .orElseThrow(() -> new DataNotFoundException("email not found"));
+    }
 }
