@@ -1,7 +1,6 @@
 package org.example.jtsb01.category.controller;
 
 import jakarta.validation.Valid;
-import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.example.jtsb01.category.model.CategoryForm;
 import org.example.jtsb01.category.service.CategoryService;
@@ -27,8 +26,7 @@ public class CategoryController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
-    public String create(@Valid CategoryForm categoryForm, BindingResult bindingResult,
-        Principal principal) {
+    public String create(@Valid CategoryForm categoryForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "category_form";
         }
