@@ -27,14 +27,14 @@
 					<span class="badge rounded-pill bg-success" th:text="${#lists.size(question.voter)}"></span>
 				</a>
 				<a th:href="@{|/question/modify/${question.id}|}" class="btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
-				   th:if="${(question.author != null and #authentication.getPrincipal() instanceof T(org.springframework.security.core.userdetails.User)
+				   th:if="${(question.author != null and #authentication.getPrincipal() instanceof T(org.example.jtsb01.user.model.CustomUserDetails)
 				        and #authentication.getPrincipal().getUsername() == question.author.username)
 				   or (question.author != null and #authentication.getPrincipal() instanceof T(org.springframework.security.oauth2.core.user.DefaultOAuth2User)
 				        and #authentication.getPrincipal().attributes.name == question.author.username)}"
 				   th:text="수정"></a>
 				<a href="javascript:void(0);" th:data-uri="@{|/question/delete/${question.id}|}"
 				   class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
-				   th:if="${(question.author != null and #authentication.getPrincipal() instanceof T(org.springframework.security.core.userdetails.User)
+				   th:if="${(question.author != null and #authentication.getPrincipal() instanceof T(org.example.jtsb01.user.model.CustomUserDetails)
 				        and #authentication.getPrincipal().getUsername() == question.author.username)
 				   or (question.author != null and #authentication.getPrincipal() instanceof T(org.springframework.security.oauth2.core.user.DefaultOAuth2User)
 				        and #authentication.getPrincipal().attributes.name == question.author.username)}"
@@ -78,14 +78,14 @@
 					<span class="badge rounded-pill bg-success" th:text="${#lists.size(answer.voter)}"></span>
 				</a>
 				<a th:href="@{|/answer/modify/${answer.id}|}" class="btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
-				   th:if="${(answer.author != null and #authentication.getPrincipal() instanceof T(org.springframework.security.core.userdetails.User)
+				   th:if="${(answer.author != null and #authentication.getPrincipal() instanceof T(org.example.jtsb01.user.model.CustomUserDetails)
 				        and #authentication.getPrincipal().getUsername() == answer.author.username)
 				   or (answer.author != null and #authentication.getPrincipal() instanceof T(org.springframework.security.oauth2.core.user.DefaultOAuth2User)
 				        and #authentication.getPrincipal().attributes.name == answer.author.username)}"
 				   th:text="수정"></a>
 				<a href="javascript:void(0);" th:data-uri="@{|/answer/delete/${answer.id}|}"
 				   class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
-				   th:if="${(answer.author != null and #authentication.getPrincipal() instanceof T(org.springframework.security.core.userdetails.User)
+				   th:if="${(answer.author != null and #authentication.getPrincipal() instanceof T(org.example.jtsb01.user.model.CustomUserDetails)
 				        and #authentication.getPrincipal().getUsername() == answer.author.username)
 				   or (answer.author != null and #authentication.getPrincipal() instanceof T(org.springframework.security.oauth2.core.user.DefaultOAuth2User)
 				        and #authentication.getPrincipal().attributes.name == answer.author.username)}"

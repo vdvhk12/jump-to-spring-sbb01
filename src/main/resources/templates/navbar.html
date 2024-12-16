@@ -13,6 +13,9 @@
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/signup}">회원가입</a>
+					<a class="nav-link" sec:authorize="isAuthenticated()"
+					   th:if="${#authentication.getPrincipal() instanceof T(org.example.jtsb01.user.model.CustomUserDetails)}"
+					   th:href="@{/user/{id}/password(id=${#authentication.principal.id})}">비밀번호 변경</a>
 				</li>
 			</ul>
 		</div>

@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.jtsb01.user.entity.SiteUser;
+import org.example.jtsb01.user.model.CustomUserDetails;
 import org.example.jtsb01.user.model.UserRole;
 import org.example.jtsb01.user.repository.SiteUserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -32,6 +32,6 @@ public class SiteUserSecurityService implements UserDetailsService {
             authorities.add(new SimpleGrantedAuthority(UserRole.USER.getRole()));
         }
 
-        return new User(siteUser.getUsername(), siteUser.getPassword(), authorities);
+        return new CustomUserDetails(siteUser.getId(), siteUser.getUsername(), siteUser.getPassword(), authorities);
     }
 }

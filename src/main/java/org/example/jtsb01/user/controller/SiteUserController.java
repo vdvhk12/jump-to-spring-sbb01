@@ -2,14 +2,18 @@ package org.example.jtsb01.user.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.jtsb01.global.exception.PasswordNotMatchException;
+import org.example.jtsb01.user.model.PasswordForm;
 import org.example.jtsb01.user.model.SiteUserForm;
 import org.example.jtsb01.user.service.SiteUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -54,6 +58,36 @@ public class SiteUserController {
             return "signup_form";
         }
 
+        return "redirect:/";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{id}/password")
+    public String updatePassword(@PathVariable("id") Long id, PasswordForm passwordForm) {
+        return "password_form";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/{id}/password")
+    public String updatePassword(@PathVariable("id") Long id, @Valid PasswordForm passwordForm,
+        BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "password_form";
+        }
+
+        try {
+            siteUserService.verifyPassword(id, passwordForm);
+        } catch (PasswordNotMatchException e) {
+            bindingResult.rejectValue("oldPassword", "passwordNotMatch", "기존 비밀번호가 일치하지 않습니다.");
+            return "password_form";
+        }
+        if(!passwordForm.getNewPassword().equals(passwordForm.getConfirmNewPassword())) {
+            bindingResult.rejectValue("confirmNewPassword", "passwordInCorrect"
+                , "2개의 패스워드가 일치하지 않습니다.");
+            return "password_form";
+        }
+
+        siteUserService.updatePassword(id, passwordForm);
         return "redirect:/";
     }
 }
