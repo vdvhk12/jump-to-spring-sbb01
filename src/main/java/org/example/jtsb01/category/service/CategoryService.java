@@ -1,7 +1,6 @@
 package org.example.jtsb01.category.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.example.jtsb01.category.entity.Category;
 import org.example.jtsb01.category.model.CategoryDto;
@@ -22,7 +21,11 @@ public class CategoryService {
     }
 
     public List<CategoryDto> getAllCategories() {
-        return categoryRepository.findAll().stream().map(CategoryDto::fromEntityBasic).collect(
-            Collectors.toList());
+        return categoryRepository.findAll().stream().map(CategoryDto::fromEntityBasic).toList();
+    }
+
+    public List<CategoryDto> getAllCategoriesWithQuestionList() {
+        return categoryRepository.findAll().stream().map(CategoryDto::fromEntityWithQuestionList)
+            .toList();
     }
 }

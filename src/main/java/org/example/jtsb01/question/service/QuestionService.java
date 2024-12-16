@@ -60,6 +60,14 @@ public class QuestionService {
         return questionRepository.findAllByKeyword(kw, pageable).map(QuestionDto::fromEntity);
     }
 
+    public Page<QuestionDto> getListByCategory(Long categoryId, int page) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createDate"));
+
+        Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(sorts));
+        return questionRepository.findAllByCategoryId(categoryId, pageable).map(QuestionDto::fromEntity);
+    }
+
     public QuestionDto getQuestion(Long id) {
         return QuestionDto.fromEntity(questionRepository.findById(id)
             .orElseThrow(() -> new DataNotFoundException("Question not found")));

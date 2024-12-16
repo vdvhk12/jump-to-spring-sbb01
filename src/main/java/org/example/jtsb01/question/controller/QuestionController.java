@@ -38,9 +38,18 @@ public class QuestionController {
 
     @GetMapping("/list")
     public String list(Model model, @RequestParam(value = "page", defaultValue = "1") int page,
+        @RequestParam(value = "category", defaultValue = "") Long categoryId,
         @RequestParam(value = "kw", defaultValue = "") String kw) {
-        Page<QuestionDto> paging = questionService.getList(kw, page);
+        List<CategoryDto> categoryList = categoryService.getAllCategoriesWithQuestionList();
+
+        Page<QuestionDto> paging;
+        if (categoryId != null) {
+            paging = questionService.getListByCategory(categoryId, page);
+        } else {
+            paging = questionService.getList(kw, page);
+        }
         model.addAttribute("paging", paging);
+        model.addAttribute("categoryList", categoryList);
         return "question_list";
     }
 
