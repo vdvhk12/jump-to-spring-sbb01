@@ -62,19 +62,29 @@ public class QuestionService {
             .orElseThrow(() -> new DataNotFoundException("Question not found")));
     }
 
-    public QuestionDto getQuestion(Long id, int page) {
+    public QuestionDto getQuestion(Long id, int page, String sort) {
 
         Question question = questionRepository.findById(id)
             .orElseThrow(() -> new DataNotFoundException("Question not found"));
 
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.asc("createDate"));
-        
-        Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(sorts));
+        Pageable pageable = getPageable(page, sort);
         Page<AnswerDto> answerPage = answerRepository.findByQuestionId(question.getId(), pageable)
             .map(AnswerDto::fromEntity);
 
         return QuestionDto.fromEntity(question, answerPage);
+    }
+
+    private Pageable getPageable(int page, String sort) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        if (sort.isEmpty() || sort.equals("old")) {
+            sorts.add(Sort.Order.asc("createDate"));
+        } else if(sort.equals("new")) {
+            sorts.add(Sort.Order.desc("createDate"));
+        } else if(sort.equals("recommend")) {
+            sorts.add(Sort.Order.desc("voter"));
+        }
+
+        return PageRequest.of(page - 1, 10, Sort.by(sorts));
     }
 
     public void createQuestion(QuestionForm questionForm, SiteUserDto siteUserDto) {
