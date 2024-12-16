@@ -113,8 +113,11 @@ public class QuestionService {
     public void modifyQuestion(Long id, QuestionForm questionForm) {
         Question question = questionRepository.findById(id)
             .orElseThrow(() -> new DataNotFoundException("Question not found"));
+        Category category = categoryRepository.findById(questionForm.getCategoryId())
+            .orElseThrow(() -> new DataNotFoundException("Category not found"));
         questionRepository.save(Question.builder()
             .id(question.getId())
+            .category(category)
             .subject(questionForm.getSubject())
             .content(questionForm.getContent())
             .createDate(question.getCreateDate())

@@ -85,10 +85,13 @@ public class QuestionController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String modify(QuestionForm questionForm, @PathVariable("id") Long id) {
+    public String modify(@PathVariable("id") Long id, QuestionForm questionForm, Model model) {
+        List<CategoryDto> categoryList = categoryService.getAllCategories();
+        model.addAttribute("categoryList", categoryList);
         QuestionDto question = questionService.getQuestion(id);
         questionForm.setSubject(question.getSubject());
         questionForm.setContent(question.getContent());
+        questionForm.setCategoryId(question.getCategory().getId());
         return "question_form";
     }
 
