@@ -5,6 +5,7 @@ import org.example.jtsb01.global.exception.DataNotFoundException;
 import org.example.jtsb01.user.entity.SiteUser;
 import org.example.jtsb01.user.model.SiteUserDto;
 import org.example.jtsb01.user.model.SiteUserForm;
+import org.example.jtsb01.user.model.UserRole;
 import org.example.jtsb01.user.repository.SiteUserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class SiteUserService {
             .username(siteUserForm.getUsername())
             .password(passwordEncoder.encode(siteUserForm.getPassword1()))
             .email(siteUserForm.getEmail())
+            .userRole(UserRole.USER)
             .build());
     }
 

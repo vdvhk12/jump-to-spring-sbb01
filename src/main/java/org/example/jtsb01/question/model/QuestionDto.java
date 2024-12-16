@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.jtsb01.answer.model.AnswerDto;
+import org.example.jtsb01.category.model.CategoryDto;
 import org.example.jtsb01.question.entity.Question;
 import org.example.jtsb01.user.model.SiteUserDto;
 import org.springframework.data.domain.Page;
@@ -21,6 +22,7 @@ public class QuestionDto {
     private String content;
     private LocalDateTime createDate;
     private LocalDateTime modifyDate;
+    private CategoryDto category;
     private Long answerCount;
     private SiteUserDto author;
     private Page<AnswerDto> answerList;
@@ -33,6 +35,7 @@ public class QuestionDto {
             .subject(question.getSubject())
             .content(question.getContent())
             .createDate(question.getCreateDate())
+            .category(CategoryDto.fromEntityBasic(question.getCategory()))
             .answerCount((long) question.getAnswerList().size())
             .author(SiteUserDto.fromEntity(question.getAuthor()))
             .build();
@@ -45,6 +48,7 @@ public class QuestionDto {
             .subject(question.getSubject())
             .content(question.getContent())
             .createDate(question.getCreateDate())
+            .category(CategoryDto.fromEntityBasic(question.getCategory()))
             .modifyDate(question.getModifyDate())
             .answerCount(answerPage.getTotalElements())
             .author(SiteUserDto.fromEntity(question.getAuthor()))
