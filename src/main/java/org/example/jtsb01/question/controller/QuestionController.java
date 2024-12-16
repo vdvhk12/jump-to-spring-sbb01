@@ -2,8 +2,11 @@ package org.example.jtsb01.question.controller;
 
 import jakarta.validation.Valid;
 import java.security.Principal;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.jtsb01.answer.model.AnswerForm;
+import org.example.jtsb01.category.model.CategoryDto;
+import org.example.jtsb01.category.service.CategoryService;
 import org.example.jtsb01.question.model.QuestionDto;
 import org.example.jtsb01.question.model.QuestionForm;
 import org.example.jtsb01.question.service.QuestionService;
@@ -31,6 +34,7 @@ public class QuestionController {
 
     private final QuestionService questionService;
     private final SiteUserService siteUserService;
+    private final CategoryService categoryService;
 
     @GetMapping("/list")
     public String list(Model model, @RequestParam(value = "page", defaultValue = "1") int page,
@@ -51,7 +55,9 @@ public class QuestionController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
-    public String create(QuestionForm questionForm) {
+    public String create(QuestionForm questionForm, Model model) {
+        List<CategoryDto> categoryList = categoryService.getAllCategories();
+        model.addAttribute("categoryList", categoryList);
         return "question_form";
     }
 

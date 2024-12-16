@@ -18,7 +18,7 @@ public class CategoryDto {
     private QuestionDto question;
     private List<QuestionDto> questionList;
 
-    public static CategoryDto formEntityWithQuestionList(Category category) {
+    public static CategoryDto fromEntityWithQuestionList(Category category) {
         return CategoryDto.builder()
             .id(category.getId())
             .categoryName(category.getCategoryName())

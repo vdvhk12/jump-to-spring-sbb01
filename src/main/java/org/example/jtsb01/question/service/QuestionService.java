@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.example.jtsb01.answer.entity.Answer;
 import org.example.jtsb01.answer.model.AnswerDto;
 import org.example.jtsb01.answer.repository.AnswerRepository;
+import org.example.jtsb01.category.entity.Category;
+import org.example.jtsb01.category.repository.CategoryRepository;
 import org.example.jtsb01.global.exception.DataNotFoundException;
 import org.example.jtsb01.question.entity.Question;
 import org.example.jtsb01.question.model.QuestionDto;
@@ -34,6 +36,7 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
+    private final CategoryRepository categoryRepository;
 
     public List<QuestionDto> getList() {
         return questionRepository.findAll().stream().map(QuestionDto::fromEntity).toList();
@@ -88,7 +91,10 @@ public class QuestionService {
     }
 
     public void createQuestion(QuestionForm questionForm, SiteUserDto siteUserDto) {
+        Category category = categoryRepository.findById(questionForm.getCategoryId())
+            .orElseThrow(() -> new DataNotFoundException("Category not found"));
         questionRepository.save(Question.builder()
+            .category(category)
             .subject(questionForm.getSubject())
             .content(questionForm.getContent())
             .createDate(LocalDateTime.now())
