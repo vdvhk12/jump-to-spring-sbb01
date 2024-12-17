@@ -2,6 +2,8 @@ package org.example.jtsb01.user.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.jtsb01.answer.model.AnswerDto;
+import org.example.jtsb01.answer.service.AnswerService;
 import org.example.jtsb01.global.exception.PasswordNotMatchException;
 import org.example.jtsb01.mail.model.MailForm;
 import org.example.jtsb01.question.model.QuestionDto;
@@ -32,6 +34,7 @@ public class SiteUserController {
     private final SiteUserService siteUserService;
     private static final Logger logger = LoggerFactory.getLogger(SiteUserController.class);
     private final QuestionService questionService;
+    private final AnswerService answerService;
 
     @GetMapping("/signup")
     public String signup(SiteUserForm siteUserForm) {
@@ -107,13 +110,17 @@ public class SiteUserController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}")
     public String detail(@PathVariable("id") Long id,
-        @RequestParam(value = "page", defaultValue = "1") int page, Model model) {
+        @RequestParam(value = "questionPage", defaultValue = "1") int questionPage,
+        @RequestParam(value = "answerPage", defaultValue = "1") int answerPage,
+        Model model) {
 
         SiteUserDto siteUser = siteUserService.getSiteUser(id);
-        Page<QuestionDto> paging = questionService.getListByAuthorId(id, page);
+        Page<QuestionDto> questionPaging = questionService.getListByAuthorId(id, questionPage);
+        Page<AnswerDto> answerPaging = answerService.getList(id, answerPage);
 //        questionService.getListByAuthorId(id);
         model.addAttribute("siteUser", siteUser);
-        model.addAttribute("paging", paging);
+        model.addAttribute("questionPaging", questionPaging);
+        model.addAttribute("answerPaging", answerPaging);
         return "user_detail";
     }
 }
