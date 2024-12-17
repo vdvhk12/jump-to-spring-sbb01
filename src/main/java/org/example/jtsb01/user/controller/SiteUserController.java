@@ -4,19 +4,25 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.jtsb01.global.exception.PasswordNotMatchException;
 import org.example.jtsb01.mail.model.MailForm;
+import org.example.jtsb01.question.model.QuestionDto;
+import org.example.jtsb01.question.service.QuestionService;
 import org.example.jtsb01.user.model.PasswordForm;
+import org.example.jtsb01.user.model.SiteUserDto;
 import org.example.jtsb01.user.model.SiteUserForm;
 import org.example.jtsb01.user.service.SiteUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
@@ -25,6 +31,7 @@ public class SiteUserController {
 
     private final SiteUserService siteUserService;
     private static final Logger logger = LoggerFactory.getLogger(SiteUserController.class);
+    private final QuestionService questionService;
 
     @GetMapping("/signup")
     public String signup(SiteUserForm siteUserForm) {
@@ -95,5 +102,18 @@ public class SiteUserController {
 
         siteUserService.updatePassword(id, passwordForm);
         return "redirect:/user/logout";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{id}")
+    public String detail(@PathVariable("id") Long id,
+        @RequestParam(value = "page", defaultValue = "1") int page, Model model) {
+
+        SiteUserDto siteUser = siteUserService.getSiteUser(id);
+        Page<QuestionDto> paging = questionService.getListByAuthorId(id, page);
+//        questionService.getListByAuthorId(id);
+        model.addAttribute("siteUser", siteUser);
+        model.addAttribute("paging", paging);
+        return "user_detail";
     }
 }

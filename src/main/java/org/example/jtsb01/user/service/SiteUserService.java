@@ -33,6 +33,11 @@ public class SiteUserService {
             .orElseThrow(() -> new DataNotFoundException("site user not found")));
     }
 
+    public SiteUserDto getSiteUser(Long id) {
+        return SiteUserDto.fromEntity(siteUserRepository.findById(id)
+            .orElseThrow(() -> new DataNotFoundException("site user not found")));
+    }
+
     public void updatePassword(Long id, PasswordForm passwordForm) {
         SiteUser siteUser = siteUserRepository.findById(id)
             .orElseThrow(() -> new DataNotFoundException("site user not found"));

@@ -158,4 +158,17 @@ public class QuestionService {
             }
         };
     }
+
+    public Page<QuestionDto> getListByAuthorId(Long authorId, int page) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createDate"));
+        Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(sorts));
+        return questionRepository.findAllByAuthorId(authorId, pageable).map(QuestionDto::fromEntity);
+    }
+//    public void  getListByAuthorId(Long id) {
+//        List<Question> allByAuthorId = questionRepository.findAllByAuthorId(id);
+//        for(Question question : allByAuthorId) {
+//            System.out.println("question.getContent() = " + question.getContent());
+//        }
+//    }
 }
