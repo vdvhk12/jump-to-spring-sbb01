@@ -50,7 +50,7 @@ public class CommentController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
     public String modifyQuestionComment(@PathVariable("id") Long id, CommentForm commentForm,
-        Model model, Principal principal) {
+        Principal principal) {
         CommentDto comment = commentService.getQuestionComment(id);
         commentForm.setContent(comment.getContent());
         return "comment_form";
@@ -67,6 +67,16 @@ public class CommentController {
         String username = getUsernameFromPrincipal(principal);
         checkUserPermission(username, comment.getAuthor().getUsername(), "수정");
         commentService.modifyQuestionComment(id, commentForm);
+        return String.format("redirect:/question/detail/%s", comment.getQuestion().getId());
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/delete/{id}")
+    public String deleteQuestionComment(@PathVariable("id") Long id, Principal principal) {
+        CommentDto comment = commentService.getQuestionComment(id);
+        String username = getUsernameFromPrincipal(principal);
+        checkUserPermission(username, comment.getAuthor().getUsername(), "삭제");
+        commentService.deleteQuestionComment(id);
         return String.format("redirect:/question/detail/%s", comment.getQuestion().getId());
     }
 

@@ -45,4 +45,8 @@ public class CommentService {
             .build());
     }
 
+    public void deleteQuestionComment(Long commentId) {
+        commentRepository.deleteById(commentId);
+    }
+
 }
