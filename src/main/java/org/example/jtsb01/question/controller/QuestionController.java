@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.jtsb01.answer.model.AnswerForm;
 import org.example.jtsb01.category.model.CategoryDto;
 import org.example.jtsb01.category.service.CategoryService;
+import org.example.jtsb01.comment.model.CommentForm;
 import org.example.jtsb01.question.model.QuestionDto;
 import org.example.jtsb01.question.model.QuestionForm;
 import org.example.jtsb01.question.service.QuestionService;
@@ -54,7 +55,8 @@ public class QuestionController {
     }
 
     @GetMapping("/detail/{id}")
-    public String detail(@PathVariable("id") Long id, Model model, AnswerForm answerForm,
+    public String detail(@PathVariable("id") Long id,
+        Model model, AnswerForm answerForm, CommentForm commentForm,
         @RequestParam(value = "page", defaultValue = "1") int page,
         @RequestParam(value = "sort", defaultValue = "") String sort) {
         QuestionDto question = questionService.getQuestion(id, page, sort);

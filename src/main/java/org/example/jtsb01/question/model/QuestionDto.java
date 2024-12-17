@@ -1,6 +1,7 @@
 package org.example.jtsb01.question.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.example.jtsb01.answer.model.AnswerDto;
 import org.example.jtsb01.category.model.CategoryDto;
+import org.example.jtsb01.comment.model.CommentDto;
 import org.example.jtsb01.question.entity.Question;
 import org.example.jtsb01.user.model.SiteUserDto;
 import org.springframework.data.domain.Page;
@@ -26,6 +28,7 @@ public class QuestionDto {
     private Long answerCount;
     private SiteUserDto author;
     private Page<AnswerDto> answerList;
+    private List<CommentDto> commentList;
     private Set<SiteUserDto> voter;
 
     //목록페이지
@@ -53,6 +56,9 @@ public class QuestionDto {
             .answerCount(answerPage.getTotalElements())
             .author(SiteUserDto.fromEntity(question.getAuthor()))
             .answerList(answerPage)
+            .commentList(
+                question.getCommentList().stream().map(CommentDto::questionCommentFromEntity)
+                    .toList())
             .voter(question.getVoter().stream().map(SiteUserDto::fromEntity)
                 .collect(Collectors.toSet()))
             .build();
